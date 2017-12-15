@@ -2,10 +2,10 @@
   <div class="login-container">
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
       class="card-box login-form">
-      <h3 class="title">vue-element-admin</h3>
+      <h3 class="title">Nignx-Dispatch</h3>
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
-          <svg-icon icon-class="user" />
+          <svg-icon icon-class="user" ></svg-icon>
         </span>
         <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
       </el-form-item>
@@ -22,10 +22,7 @@
           Sign in
         </el-button>
       </el-form-item>
-      <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        </span> password: admin</span>
-      </div>
+
     </el-form>
   </div>
 </template>
@@ -37,7 +34,7 @@ export default {
   name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
+      if (!value) {
         callback(new Error('请输入正确的用户名'))
       } else {
         callback()
@@ -53,7 +50,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: 'admin'
+        password: 'A>-Fd},YP@'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -93,7 +90,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
   @import "src/styles/mixin.scss";
-  $bg:#2d3a4b;
+  $bg:#60281e;
   $dark_gray:#889aa4;
   $light_gray:#eee;
 

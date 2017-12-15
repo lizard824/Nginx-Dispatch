@@ -8,6 +8,7 @@
   </div>
 </template>
 
+
 <script>
 import { Navbar, Sidebar, AppMain } from '@/views/layout/components'
 

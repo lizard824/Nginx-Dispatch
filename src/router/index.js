@@ -32,44 +32,7 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: _import('dashboard/index')
     }]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: _import('table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: _import('tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: _import('form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
-  },
-
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 export default new Router({
@@ -78,3 +41,47 @@ export default new Router({
   routes: constantRouterMap
 })
 
+export const asyncRouterMap = [
+  {
+    path: '/ssl',
+    component: Layout,
+    redirect: 'ssl/index',
+    name: '证书管理',
+    noDropdown: true,
+    children: [{ path: 'index', component: _import('ssl/index'), name: '证书管理页', meta: { title: 'ssl', icon: 'ssl', perm: ['1'] }}]
+  },
+  {
+    path: '/nginx',
+    component: Layout,
+    redirect: 'nginx/index',
+    name: 'nginx管理',
+    noDropdown: true,
+    children: [{ path: 'index', component: _import('nginx/index'), name: 'nginx管理页', meta: { title: 'nginx', icon: 'server', perm: ['2'] }}]
+  },
+  {
+    path: '/domain',
+    component: Layout,
+    redirect: 'domain/index',
+    name: 'domain管理',
+    noDropdown: true,
+    children: [{ path: 'index', component: _import('domain/index'), name: 'domain管理页', meta: { title: 'domain', icon: 'domain', perm: ['3'] }}]
+  },
+  {
+    path: '/upstream',
+    component: Layout,
+    redirect: 'upstream/index',
+    name: 'upstream管理',
+    noDropdown: true,
+    children: [{ path: 'index', component: _import('upstream/index'), name: 'upstream管理页', meta: { title: 'upstream', icon: 'server', perm: ['4'] }}]
+  },
+  {
+    path: '/users',
+    component: Layout,
+    redirect: 'users/index',
+    name: 'users管理',
+    noDropdown: true,
+    children: [{ path: 'user', component: _import('users/user'), name: 'users管理页', meta: { title: 'user', icon: 'user', perm: ['5'] }}]
+  },
+  { path: '*', redirect: '/404', hidden: true }
+
+]

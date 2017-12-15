@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name:{{name}}</div>
-    <div class="dashboard-text">role:<span v-for='role in roles' :key='role'>{{role}}</span></div>
+    <div class="dashboard-text">name:{{username}}</div>
+    <div class="dashboard-text">perms:<span v-for='perm in perms' :key='perm'>{{perm}}</span></div>
   </div>
 </template>
 
@@ -12,8 +12,8 @@ export default {
   name: 'dashboard',
   computed: {
     ...mapGetters([
-      'name',
-      'roles'
+      'username',
+      'perms'
     ])
   }
 }

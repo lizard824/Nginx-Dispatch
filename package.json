@@ -1,9 +1,9 @@
 {
-  "name": "vue-admin-template",
+  "name": "Nginx-Dispatch",
   "version": "3.0.0",
   "license": "MIT",
-  "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
-  "author": "Pan <panfree23@gmail.com>",
+  "description": "Nginx",
+  "author": "Kyle",
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
@@ -13,12 +13,14 @@
   "dependencies": {
     "axios": "0.17.1",
     "element-ui": "2.0.5",
+    "file-saver": "^1.3.3",
     "js-cookie": "2.2.0",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "vue": "2.5.9",
     "vue-router": "3.0.1",
-    "vuex": "3.0.1"
+    "vuex": "3.0.1",
+    "xlsx": "^0.11.13"
   },
   "devDependencies": {
     "autoprefixer": "7.1.6",
@@ -29,6 +31,7 @@
     "babel-preset-env": "1.6.1",
     "babel-preset-stage-2": "6.24.1",
     "babel-register": "6.26.0",
+    "bable-loader": "^0.0.1-security",
     "chalk": "2.3.0",
     "connect-history-api-fallback": "1.5.0",
     "copy-webpack-plugin": "4.2.3",
@@ -50,6 +53,7 @@
     "ora": "1.3.0",
     "rimraf": "2.6.2",
     "sass-loader": "6.0.6",
+    "script-loader": "^0.7.2",
     "semver": "5.4.1",
     "shelljs": "0.7.8",
     "svg-sprite-loader": "3.4.1",
