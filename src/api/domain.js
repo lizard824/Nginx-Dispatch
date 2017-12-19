@@ -16,7 +16,7 @@ export function addItem(item) {
   })
 }
 
-export function delteItem(item) {
+export function deleteItem(item) {
   return request({
     url: '/domain/delete',
     method: 'post',

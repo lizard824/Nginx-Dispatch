@@ -7,8 +7,10 @@ import router from './router'
 import store from './store'
 import '@/icons' // icon
 import '@/permission' // 权限
+import VueQuillEditor from 'vue-quill-editor'
 
 Vue.use(ElementUI, { locale })
+Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false
 

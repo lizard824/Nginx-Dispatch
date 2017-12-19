@@ -66,14 +66,14 @@ export const asyncRouterMap = [
     noDropdown: true,
     children: [{ path: 'index', component: _import('domain/index'), name: 'domain管理页', meta: { title: 'domain', icon: 'domain', perm: ['3'] }}]
   },
-  {
-    path: '/upstream',
-    component: Layout,
-    redirect: 'upstream/index',
-    name: 'upstream管理',
-    noDropdown: true,
-    children: [{ path: 'index', component: _import('upstream/index'), name: 'upstream管理页', meta: { title: 'upstream', icon: 'server', perm: ['4'] }}]
-  },
+  // {
+  //   path: '/upstream',
+  //   component: Layout,
+  //   redirect: 'upstream/index',
+  //   name: 'upstream管理',
+  //   noDropdown: true,
+  //   children: [{ path: 'index', component: _import('upstream/index'), name: 'upstream管理页', meta: { title: 'upstream', icon: 'server', perm: ['4'] }}]
+  // },
   {
     path: '/users',
     component: Layout,
