@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {getPerm,editPerm} from '@/api/users'
 export default {
   data() {
     return {
@@ -50,7 +50,6 @@ export default {
       listQuery: {
         page: 1,
         pagesize: 20,
-
       },
       temp: {
         username: '',
@@ -162,25 +161,6 @@ export default {
           }
         ]
       }, {
-        id: '4',
-        label: 'upstream服务器',
-        children: [{
-          id: '4c',
-          label: '增加'
-        }, {
-          id: '4u',
-          label: '修改'
-        }, {
-          id: '4r',
-          label: '查询'
-        }, {
-          id: '4d',
-          label: '删除'
-        }, {
-          id: '4l',
-          label: '上传'
-        }]
-      }, {
         id: '5',
         label: 'User'
       }],
@@ -197,13 +177,11 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      axios.get('http://cmdb.tigerbrokers.net:8000/user/getPerms', {
-        params: this.listQuery
-      }).then(response => {
+      getPerm(this.listQuery).then(response => {
         console.log(response.data);
-        this.list = response.data.data
-        console.log(response.data.total)
-        this.total = response.data.total[0].total
+        this.list = response.data
+
+        this.total = response.total
         this.listLoading = false
       }).catch((err) => {
         console.log(err)
@@ -235,7 +213,7 @@ export default {
       console.log(this.choices)
       this.temp.perms = this.choices.toString()
 
-      axios.post('http://cmdb.tigerbrokers.net:8000/user/editPerms', this.temp).then(response => {
+      editPerm(this.temp).then(response => {
         console.log(response.data)
         this.dialogFormVisible = false
         this.$notify({

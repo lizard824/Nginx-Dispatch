@@ -2,7 +2,7 @@
 <div class="app-container calendar-list-container">
   <div class="filter-container" style="padding-bottom: 10px">
     <el-button type="primary" @click="add">add</el-button>
-    <el-button type="primary" @click="search" icon="el-icon-search">搜索</el-button>
+    <!-- <el-button type="primary" @click="search" icon="el-icon-search">搜索</el-button> -->
     <!-- <el-button type="primary" @click="MultiEdit" icon="el-icon-edit">批量</el-button> -->
     <el-button type="primary" @click="MultiDelete" icon="el-icon-delete">批量</el-button>
     <el-upload action="" style="float:right;padding-bottom:10px">
@@ -97,7 +97,7 @@
     <el-table-column align="center" label="编辑">
       <template slot-scope="scope">
         <el-button :type="scope.row.edit?'success':'primary'" @click='scope.row.edit=!scope.row.edit' size="small" icon="el-icon-edit">{{scope.row.edit?'完成':'编辑'}}</el-button>
-        <el-button  size="small" type="danger" icon="el-icon-delete"></el-button>
+        <el-button  size="small" type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index,scope.row)"></el-button>
       </template>
 
     </el-table-column>
@@ -118,7 +118,7 @@
     </div>
   </el-dialog> -->
   <!-- edit -->
-  <el-dialog title="edit" :visible.sync="dialogEditVisible" width="550px">
+  <el-dialog title="config" :visible.sync="dialogEditVisible" width="550px">
     <el-input
   type="textarea"
   :autosize="{ minRows: 2, maxRows: 4}"
@@ -131,7 +131,7 @@
     </div>
   </el-dialog>
   <!-- search -->
-  <el-dialog title="edit" :visible.sync="dialogSearchVisible" width="550px">
+  <!-- <el-dialog title="edit" :visible.sync="dialogSearchVisible" width="550px">
     <el-form :model="listQuery"  ref="listQuery" label-width="100px">
 
     </el-form>
@@ -139,7 +139,7 @@
       <el-button @click="dialogSearchVisible = false">取 消</el-button>
       <el-button type="primary" @click="search">确 定</el-button>
     </div>
-  </el-dialog>
+  </el-dialog> -->
 </div>
 </template>
 
@@ -181,13 +181,24 @@ export default {
       transferSelect: [],
       setList: selectList,
       temp: {
-
+        domain_name:null,
+        region:null,
+        domain_type:null,
+        line1:null,
+        line2:null,
+        line3:null
       },
       ctemp: {
-
+        domain_name:null,
+        region:null,
+        domain_type:null,
+        line1:null,
+        line2:null,
+        line3:null
       },
       listQuery: {
-
+        page:1,
+        pagesize:20
       },
       tableData: [{
         date: '2016-05-02',
@@ -250,11 +261,11 @@ export default {
   //   }
   // },
   created(){
-
+      this.getList()
   },
   methods: {
     getList() {
-      this.listLoading = trueet
+      this.listLoading = true
       getList(this.listQuery).then(response =>{
         this.list =  response.data
         this.total = response.total[0].total
@@ -307,9 +318,9 @@ export default {
         }
       })
     },
-    MultiEdit() {
-
-    },
+    // MultiEdit() {
+    //
+    // },
     MultiDelete() {
       this.multipleSelection = []
         this.setList.forEach((item, i) => {
@@ -348,9 +359,42 @@ export default {
 
        console.log(this.multipleSelection)
      },
-     handleDownload(){
+     handleDelete(index,row){
+       const h = this.$createElement;
+        this.$msgbox({
+          title: '删除',
+          message: h('p', null, [
+            h('span', null, '删除此条记录？'),
+            h('i', { style: 'color: red' })
+          ]),
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
 
-     }
+        }).then(action => {
+          deleteItem({domain_id: [row.domain_id]}).then(response => {
+            console.log(response.data);
+            if(response.data.code=='20000'){
+              this.$notify({
+                title: '成功',
+                message: response.data.msg,
+                type: 'success',
+                duration: 5000
+              })
+            }else{
+              this.$notify({
+                title: '失败',
+                message: response.data.msg,
+                type: 'warning',
+                duration: 5000
+              })
+            }
+            const index = this.list.indexOf(row)
+            this.list.splice(index, 1)
+          }).catch(error => {
+          })
+        });
+     },
   }
 }
 </script>

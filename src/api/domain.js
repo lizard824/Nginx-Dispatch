@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getList(params) {
   return request({
-    url: '/domain/list',
+    url: '/domain/getAll',
     method: 'get',
     params
   })
@@ -26,7 +26,7 @@ export function deleteItem(item) {
 
 export function editItem(item) {
   return request({
-    url: '/domain/edit',
+    url: '/domain/update',
     method: 'post',
     data: { item }
   })

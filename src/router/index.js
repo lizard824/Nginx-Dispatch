@@ -56,7 +56,7 @@ export const asyncRouterMap = [
     redirect: 'nginx/index',
     name: 'nginx管理',
     noDropdown: true,
-    children: [{ path: 'index', component: _import('nginx/index'), name: 'nginx管理页', meta: { title: 'nginx', icon: 'server', perm: ['2'] }}]
+    children: [{ path: 'index', component: _import('nginx/index'), name: 'nginx管理页', meta: { title: 'nginx', icon: 'server', perm: ['1'] }}]
   },
   {
     path: '/domain',
@@ -64,7 +64,7 @@ export const asyncRouterMap = [
     redirect: 'domain/index',
     name: 'domain管理',
     noDropdown: true,
-    children: [{ path: 'index', component: _import('domain/index'), name: 'domain管理页', meta: { title: 'domain', icon: 'domain', perm: ['3'] }}]
+    children: [{ path: 'index', component: _import('domain/index'), name: 'domain管理页', meta: { title: 'domain', icon: 'domain', perm: ['1'] }}]
   },
   // {
   //   path: '/upstream',
@@ -80,7 +80,7 @@ export const asyncRouterMap = [
     redirect: 'users/index',
     name: 'users管理',
     noDropdown: true,
-    children: [{ path: 'user', component: _import('users/user'), name: 'users管理页', meta: { title: 'user', icon: 'user', perm: ['5'] }}]
+    children: [{ path: 'user', component: _import('users/user'), name: 'users管理页', meta: { title: 'user', icon: 'user', perm: ['1'] }}]
   },
   { path: '*', redirect: '/404', hidden: true }
 

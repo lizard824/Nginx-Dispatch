@@ -8,34 +8,34 @@ export function getList(params) {
   })
 }
 
-export function addItem(item) {
+export function addItem(data) {
   return request({
     url: '/upstream/add',
     method: 'post',
-    data: { item }
+    data: { data }
   })
 }
 
-export function delteItem(item) {
+export function deleteItem(data) {
   return request({
     url: '/upstream/delete',
     method: 'post',
-    data: { item }
+    data: { data }
   })
 }
 
-export function editItem(item) {
+export function editItem(data) {
   return request({
     url: '/upstream/edit',
     method: 'post',
-    data: { item }
+    data: { data }
   })
 }
 
-export function searchItem(item) {
+export function searchItem(data) {
   return request({
     url: '/upstream/add',
     method: 'get',
-    item
+    data
   })
 }

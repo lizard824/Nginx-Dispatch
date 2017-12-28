@@ -2,40 +2,56 @@ import request from '@/utils/request'
 
 export function getList(params) {
   return request({
-    url: '/nginx/list',
+    url: '/nginx/getAll',
     method: 'get',
     params
   })
 }
 
-export function addItem(item) {
+export function addItem(data) {
   return request({
     url: '/nginx/add',
     method: 'post',
-    data: { item }
+    data: { data }
   })
 }
 
-export function delteItem(item) {
+export function deleteItem(data) {
   return request({
     url: '/nginx/delete',
     method: 'post',
-    data: { item }
+    data: { data }
   })
 }
 
-export function editItem(item) {
+export function editItem(data) {
   return request({
-    url: '/nginx/edit',
+    url: '/nginx/update',
     method: 'post',
-    data: { item }
+    data: { data }
   })
 }
 
-export function searchItem(item) {
+export function searchItem(data) {
   return request({
     url: '/nginx/add',
     method: 'get',
-    item
+    data
+  })
+}
+
+export function cmd(data) {
+  return request({
+    url: '/nginx/cmd',
+    method: 'post',
+    data: { data }
+  })
+}
+
+export function status(data) {
+  return request({
+    url: '/nginx/status',
+    method: 'post',
+    data: { data }
   })
 }

@@ -2,40 +2,40 @@ import request from '@/utils/request'
 
 export function getList(params) {
   return request({
-    url: '/ssl/list',
+    url: '/ssl/getAll',
     method: 'get',
     params
   })
 }
 
-export function addItem(item) {
+export function addItem(data) {
   return request({
     url: '/ssl/add',
     method: 'post',
-    data: { item }
+    data: { data }
   })
 }
 
-export function delteItem(item) {
+export function deleteItem(data) {
   return request({
     url: '/ssl/delete',
     method: 'post',
-    data: { item }
+    data: { data }
   })
 }
 
-export function editItem(item) {
+export function editItem(data) {
   return request({
-    url: '/ssl/edit',
+    url: '/ssl/update',
     method: 'post',
-    data: { item }
+    data: { data }
   })
 }
 
-export function searchItem(item) {
+export function searchItem(data) {
   return request({
     url: '/ssl/add',
     method: 'get',
-    item
+    data
   })
 }

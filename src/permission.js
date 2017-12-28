@@ -14,7 +14,7 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.perms.length === 0) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
-          const perms = res.data.perms
+          const perms = res.data[0].perms
           store.dispatch('GenerateRoutes', { perms }).then(() => {
             router.addRoutes(store.getters.addRouters)
             next({ ...to })

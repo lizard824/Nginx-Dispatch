@@ -28,10 +28,12 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
+      sessionStorage.setItem('username', username)
+      commit('SET_NAME', sessionStorage.getItem('username'))
+      console.log(username)
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
-          const token = response.data
-          console.log(token)
+          const token = response.data[0].token
           setToken(token)
           commit('SET_TOKEN', token)
           resolve()
@@ -45,12 +47,12 @@ const user = {
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
-          console.log(response)
           const data = response.data
-          commit('SET_PERMS', data.perms)
-          console.log(data.perms)
-          commit('SET_NAME', data.username)
-          console.log(data.username)
+          commit('SET_PERMS', data[0].perms)
+          console.log(data[0].perms)
+          commit('SET_NAME', sessionStorage.getItem('username'))
+          // commit('SET_NAME', data.username)
+          // console.log(data.username)
           // commit('SET_AVATAR', data.avatar)
           resolve(response)
         }).catch(error => {
