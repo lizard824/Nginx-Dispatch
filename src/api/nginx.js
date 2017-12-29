@@ -20,7 +20,7 @@ export function deleteItem(data) {
   return request({
     url: '/nginx/delete',
     method: 'post',
-    data: { data }
+    data
   })
 }
 
@@ -28,7 +28,7 @@ export function editItem(data) {
   return request({
     url: '/nginx/update',
     method: 'post',
-    data: { data }
+    data
   })
 }
 
@@ -44,7 +44,7 @@ export function cmd(data) {
   return request({
     url: '/nginx/cmd',
     method: 'post',
-    data: { data }
+    data
   })
 }
 
@@ -52,6 +52,6 @@ export function status(data) {
   return request({
     url: '/nginx/status',
     method: 'post',
-    data: { data }
+    data
   })
 }

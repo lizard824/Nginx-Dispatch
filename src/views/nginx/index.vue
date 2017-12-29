@@ -2,9 +2,10 @@
 <div class="app-container calendar-list-container">
   <div class="filter-container" style="padding-bottom: 10px">
     <el-button type="primary" @click="dialogNewVisible=true">add</el-button>
-    <!-- <el-button type="primary" @click="search" icon="el-icon-search">搜索</el-button> -->
-    <el-button type="primary" @click="MultiEdit" icon="el-icon-edit">批量</el-button>
-    <el-button type="primary" @click="MultiDelete" icon="el-icon-delete">批量</el-button>
+    <el-button type="primary" @click="dialogSearchVisible=true" icon="el-icon-search">test</el-button>
+    <el-button type="primary" @click="changeRole" icon="el-icon-edit">切换角色</el-button>
+    <el-button type="primary" @click="MultiDelete" icon="el-icon-edit">重启服务</el-button>
+    <el-button type="primary" @click="MultiDelete" icon="el-icon-edit">检测配置</el-button>
     <!-- <el-button type="primary" icon="el-icon-upload" >上传</el-button> -->
     <!-- <el-upload style="float:right;padding-bottom:10px">
       <el-button type="primary">上传</el-button>
@@ -65,15 +66,17 @@
 
     <el-table-column align="center" label="编辑">
       <template slot-scope="scope">
-        <svg-icon class="nginx" icon-class="edit" @click.native="handleEdit(scope.$index,scope.row)"></svg-icon>
-        <svg-icon class="nginx"icon-class="check" @click.native="cmd(scope.row,'configtest')"></svg-icon>
-        <svg-icon class="nginx"icon-class="restart" @click.native="cmd(scope.row,'restart')"></svg-icon>
-        <svg-icon class="nginx"icon-class="close" ></svg-icon>
-        <svg-icon class="nginx"icon-class="connect" @click.native="status(scope.row,'connect')"></svg-icon>
+        <el-button type="primary" size="mini" round  @click.native="handleEdit(scope.$index,scope.row)">修改</el-button>
+        <!-- <svg-icon class="nginx"icon-class="check" @click.native="cmd(scope.row,'configtest')"></svg-icon> -->
+        <!-- <svg-icon class="nginx"icon-class="restart" @click.native="cmd(scope.row,'restart')"></svg-icon> -->
+        <!-- <svg-icon class="nginx"icon-class="close" @click.native="cmd(scope.row,'close')"></svg-icon> -->
+        <!-- <svg-icon class="nginx"icon-class="connect" @click.native="status(scope.row,'connect')"></svg-icon>
         <svg-icon class="nginx"icon-class="request" @click.native="status(scope.row,'request')"></svg-icon>
-        <svg-icon class="nginx"icon-class="toggle" @click.native="changeRole(scope.row)" style="cursor:pointer;margin-left:5px"></svg-icon>
-          <!-- <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.$index,scope.row)"></el-button> -->
-        <svg-icon class="nginx"icon-class="delete" @click.native="handleDelete(scope.$index,scope.row)"></svg-icon>
+        <svg-icon class="nginx"icon-class="toggle" @click.native="changeRole(scope.row)" style="cursor:pointer;margin-left:5px"></svg-icon> -->
+          <!-- <el-button type="danger" size="mini" round @click="handleDelete(scope.$index,scope.row)">删除</el-button> -->
+          <el-button type="primary" size="mini" round @click="status(scope.row,'connect')">连接</el-button>
+          <el-button type="primary" size="mini" round @click="status(scope.row,'request')">请求</el-button>
+        <!-- <svg-icon class="nginx"icon-class="delete" @click.native="handleDelete(scope.$index,scope.row)"></svg-icon> -->
       </template>
     </el-table-column>
 
@@ -137,15 +140,15 @@
     </div>
   </el-dialog>
   <!-- //search -->
-  <!-- <el-dialog title="edit" :visible.sync="dialogSearchVisible" width="550px">
-    <el-form :model="listQuery" :rules="rules" ref="listQuery" label-width="100px">
+  <el-dialog title="chart" :visible.sync="dialogSearchVisible" width="550px">
+    <div style="height:200px;width:200px" id="echart" ref="echart">
 
-    </el-form>
+    </div>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogSearchVisible = false">取 消</el-button>
-      <el-button type="primary" @click="search">确 定</el-button>
+      <el-button type="primary" @click="">确 定</el-button>
     </div>
-  </el-dialog> -->
+  </el-dialog>
 </div>
 </template>
 
@@ -158,6 +161,8 @@ import {
   cmd,
   status
 } from '@/api/nginx'
+
+import echarts from 'echarts'
 
 export default {
   data() {
@@ -186,6 +191,7 @@ export default {
       mutipleSelection: [],
       transferSelect: [],
       setList: selectList,
+      chart:'',
       temp: {
         server_id:null,
         sn:null,
@@ -244,6 +250,14 @@ export default {
   created(){
     this.getList()
   },
+  mounted(){
+    console.log(document.getElementById('echart'))
+    console.log(this.$refs.echart)
+    this.initChart()
+  },
+  beforeDestory(){
+    this.chart.dispose()
+  },
   methods: {
     getList() {
       this.listLoading = true
@@ -263,8 +277,10 @@ export default {
       if (row.role == 'Master') {
         // this.$set(row, 'role', 'slave')
         row.role='slave'
+        this.cmd(row,'change')
       } else {
         this.$set(row, 'role', 'Master')
+        this.cmd(row,'change')
       }
     },
     create() {
@@ -332,10 +348,11 @@ export default {
         if(response.code=='20000'){
           this.$notify({
             title: '成功',
-              message: response.msg,
+              message: response.data[0],
               type: 'success',
-              duration: 5000
+              duration: 50000
           })
+
         }
         else{
           this.$notify({
@@ -351,7 +368,44 @@ export default {
 
     },
     MultiDelete() {
+          var idList = this.setList.map(function(item,index){
+                  return item.server_id
+          })
+          console.log(idList)
+          const h = this.$createElement;
+           this.$msgbox({
+             title: '删除',
+             message: h('p', null, [
+               h('span', null, '删除此条记录？'),
+               h('i', { style: 'color: red' })
+             ]),
+             showCancelButton: true,
+             confirmButtonText: '确定',
+             cancelButtonText: '取消',
 
+           }).then(action => {
+             deleteItem({server_id: [idList]}).then(response => {
+               console.log(response.data);
+               if(response.data.code=='20000'){
+                 this.$notify({
+                   title: '成功',
+                   message: response.data.msg,
+                   type: 'success',
+                   duration: 5000
+                 })
+               }else{
+                 this.$notify({
+                   title: '失败',
+                   message: response.data.msg,
+                   type: 'warning',
+                   duration: 5000
+                 })
+               }
+               const index = this.list.indexOf(row)
+               this.list.splice(index, 1)
+             }).catch(error => {
+             })
+           });
     },
     handleEdit(index,row){
       console.log(row)
@@ -411,6 +465,41 @@ export default {
        this.temp = Object.assign({}, val[0])
 
        console.log(this.multipleSelection)
+     },
+     initChart(){
+       this.chart = echarts.init(document.getElementById('echart'))
+
+       this.chart.setOption({
+      color: ['#3398DB'],
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+          type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: [{
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        axisTick: {
+          alignWithLabel: true
+        }
+      }],
+      yAxis: [{
+        type: 'value'
+      }],
+      series: [{
+        name: '直接访问',
+        type: 'bar',
+        barWidth: '60%',
+        data: [10, 52, 200, 334, 390, 330, 220]
+      }]
+    })
      }
   }
 }

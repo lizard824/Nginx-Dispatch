@@ -12,7 +12,7 @@ export function addItem(data) {
   return request({
     url: '/ssl/add',
     method: 'post',
-    data: { data }
+    data
   })
 }
 
@@ -20,7 +20,7 @@ export function deleteItem(data) {
   return request({
     url: '/ssl/delete',
     method: 'post',
-    data: { data }
+    data
   })
 }
 
@@ -28,7 +28,7 @@ export function editItem(data) {
   return request({
     url: '/ssl/update',
     method: 'post',
-    data: { data }
+    data
   })
 }
 

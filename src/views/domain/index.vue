@@ -30,8 +30,8 @@
         </el-form>
       </template>
     </el-table-column>
-    <el-table-column type="selection" width="35">
-    </el-table-column>
+    <!-- <el-table-column type="selection" width="35">
+    </el-table-column> -->
     <el-table-column label="域名" sortable>
       <template slot-scope="scope">
         <span v-show="!scope.row.edit"  style="margin-left: 10px">{{ scope.row.date }}</span>
@@ -96,7 +96,7 @@
     </el-table-column>
     <el-table-column align="center" label="编辑">
       <template slot-scope="scope">
-        <el-button :type="scope.row.edit?'success':'primary'" @click='scope.row.edit=!scope.row.edit' size="small" icon="el-icon-edit">{{scope.row.edit?'完成':'编辑'}}</el-button>
+        <el-button :type="scope.row.edit?'success':'primary'" @click='submit(scope.row)' size="small" icon="el-icon-edit">{{scope.row.edit?'完成':'编辑'}}</el-button>
         <el-button  size="small" type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index,scope.row)"></el-button>
       </template>
 
@@ -284,6 +284,29 @@ export default {
         address: "",
         edit: true
       })
+    },
+    submit(row){
+      row.edit=!row.edit
+      if(row.edit===false){
+      editItem(this.temp).then(response=>{
+        if(response.code=='20000'){
+          this.$notify({
+            title: '成功',
+              message: response.msg,
+              type: 'success',
+              duration: 5000
+          })
+        }
+        else{
+          this.$notify({
+              title: '失败',
+              message: response.msg,
+              type: 'warning',
+              duration: 5000
+            })
+        }
+      })
+      }
     },
     //config
     onEditorChange(){

@@ -1,19 +1,19 @@
 <template>
 <div class="app-container calendar-list-container">
   <div class="filter-container" style="padding-bottom: 10px">
-    <el-button type="primary" @click="dialogNewVisible=true">add</el-button>
+    <!-- <el-button type="primary" @click="dialogNewVisible=true">add</el-button> -->
     <!-- <el-button type="primary" @click="search" icon="el-icon-search">搜索</el-button> -->
     <!-- <el-button type="primary" @click="MultiEdit" icon="el-icon-edit">批量</el-button> -->
     <!-- <el-button type="primary" @click="MultiDelete" icon="el-icon-delete">批量</el-button> -->
-    <!-- <el-upload style="float:right;padding-bottom:10px">
-      <el-button type="primary">上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件(文件格式遵循导出文件)</div>
-    </el-upload> -->
+    <el-upload action="http://172.28.48.61:4000/ssl/update"    :show-file-list="false" :on-error="uploadError" :on-success="uploadSuccess" style="float:right;padding-bottom:10px">
+      <el-button  type="primary">上传</el-button>
+      <div slot="tip" class="el-upload__tip">只能上传ssl文件</div>
+    </el-upload>
   </div>
 
   <el-table :data="list" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
-    <el-table-column type="selection" width="35">
-    </el-table-column>
+    <!-- <el-table-column type="selection" width="35">
+    </el-table-column> -->
     <el-table-column label="域名">
       <template slot-scope="scope">
         <span style="margin-left: 10px">{{ scope.row.domainname }}</span>
@@ -51,7 +51,7 @@
     <el-table-column align="center" label="编辑">
       <template slot-scope="scope">
 
-            <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.$index,scope.row)">edit</el-button>
+            <!-- <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.$index,scope.row)">edit</el-button> -->
             <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.$index,scope.row)"></el-button>
 
 
@@ -299,7 +299,41 @@ export default {
        this.temp = Object.assign({}, val[0])
 
        console.log(this.multipleSelection)
-     }
+     },
+     uploadError(){
+      this.$notify({
+        title: '失败',
+        message: '上传失败',
+        type: 'warning',
+        duration: 5000
+
+      })
+    },
+    //上传成功后判断 是否录入
+    uploadSuccess(response,file,fileList) {
+
+      console.log(response)
+      if (response.code == '50000') {
+        this.$notify({
+          title: '失败',
+          message: response.msg,
+          type: 'warning',
+          duration: 5000
+
+        })
+      }
+      else {
+        this.$notify({
+          title: '成功',
+          message: response.msg,
+          type: 'success',
+          duration: 5000
+
+        })
+        this.getList()
+
+      }
+    }
 
   }
 }
