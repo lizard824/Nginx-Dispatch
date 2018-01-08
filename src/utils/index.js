@@ -56,3 +56,22 @@ export function formatTime(time, option) {
     return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
   }
 }
+
+export function formatDateTime(date, offset) {
+  var y = date.getFullYear()
+  var m = date.getMonth() + 1
+  m = m < 10 ? ('0' + m) : m
+  var d = date.getDate()
+  d = d < 10 ? ('0' + d) : d
+  var h = date.getHours()
+  var minute = date.getMinutes()
+  if (offset == null) { offset = 0 } else if (minute < 30) {
+    h = h - 1
+    minute = minute + 60
+  }
+  minute = minute - offset
+
+  minute = minute < 10 ? ('0' + minute) : minute
+  var sec = date.getSeconds()
+  return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + sec
+}

@@ -15,8 +15,16 @@
     <!-- <el-table-column type="selection" width="35">
     </el-table-column> -->
     <el-table-column label="域名">
+
       <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.domainname }}</span>
+        <el-popover trigger="hover" placement="top">
+          <p>success:{{scope.row.success}}</p>
+          <p>failed:{{scope.row.failed}}</p>
+          <p>unreachable:{{scope.row.unreachable}}</p>
+          <div slot="reference" class="name-wrapper">
+            <el-tag type="success">{{scope.row.domainname }}</el-tag>
+          </div>
+        </el-popover>
       </template>
     </el-table-column>
     <el-table-column label="名称">
@@ -39,11 +47,7 @@
         <span style="margin-left: 10px">{{ scope.row.end_time }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="失效时间">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.Invalid_time }}</span>
-      </template>
-    </el-table-column>
+
 
 
 
@@ -51,7 +55,7 @@
     <el-table-column align="center" label="编辑">
       <template slot-scope="scope">
 
-            <!-- <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.$index,scope.row)">edit</el-button> -->
+            <el-button type="primary" size="small" icon="el-icon-upload2" @click="dispatch(scope.row)">分发</el-button>
             <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.$index,scope.row)"></el-button>
 
 
@@ -93,16 +97,19 @@
       <el-button type="primary" @click="edit">确 定</el-button>
     </div>
   </el-dialog>
-  <!-- //search -->
-  <!-- <el-dialog title="edit" :visible.sync="dialogSearchVisible" width="550px">
-    <el-form :model="listQuery" :rules="rules" ref="listQuery" label-width="100px">
-
-    </el-form>
+  <!-- //shot -->
+  <el-dialog title="dispatch" :visible.sync="dialogDispatchVisible" width="550px">
+    <el-radio-group v-model="env" @change="changeHandler">
+    <el-radio  label="online" border>online</el-radio>
+    <el-radio label="test" border>test</el-radio>
+    <el-radio label="all" border>all</el-radio>
+    </el-radio-group>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogSearchVisible = false">取 消</el-button>
-      <el-button type="primary" @click="search">确 定</el-button>
+      <el-button @click="dialogDispatchVisible = false">取 消</el-button>
+
+      <el-button type="primary" @click="transfer" :loading="loading">确 定</el-button>
     </div>
-  </el-dialog> -->
+  </el-dialog>
 </div>
 </template>
 
@@ -112,7 +119,8 @@ import {
   addItem,
   deleteItem,
   editItem,
-  searchItem
+  searchItem,
+  transfer
 } from '@/api/ssl'
 
 export default {
@@ -130,6 +138,9 @@ export default {
       list: null,
       total: null,
       listLoading: true,
+      env:'',
+      trans:'',
+      loading:false,
       listQuery: {
         page: 1,
         pagesize: 20,
@@ -137,10 +148,13 @@ export default {
       },
       dialogNewVisible: false,
       dialogEditVisible: false,
-      dialogSearchVisible: false,
+      dialogDispatchVisible: false,
       mutipleSelection: [],
       transferSelect: [],
       setList: selectList,
+      // success:[],
+      // failed:[],
+      // unreachable:[],
       temp: {
           id:null,
           fileName:null,
@@ -299,6 +313,50 @@ export default {
        this.temp = Object.assign({}, val[0])
 
        console.log(this.multipleSelection)
+     },
+     changeHandler(val){
+       this.env= val
+       this.trans.type= this.env
+     },
+     dispatch(row){
+
+         this.dialogDispatchVisible=true
+         console.log(this.env)
+         this.trans = {filepath:row.filepath,id:row.id}
+
+     },
+     transfer(){
+       this.loading=true
+       transfer(this.trans).then(response=>{
+
+         if(response.code=='20000'){
+           this.dialogDispatchVisible=false
+           this.$notify({
+             title: '成功',
+               message: response.msg,
+               type: 'success',
+               duration: 5000
+           })
+          this.list.forEach(ele=>{
+            if(ele.id ===this.trans.id){
+            this.$set(ele,'success',response.data[0].success)
+            this.$set(ele,'unreachable',response.data[0].unreachable)
+            this.$set(ele,'failed',response.data[0].failed)
+          }
+          })
+
+         }
+         else{
+           this.$notify({
+               title: '失败',
+               message: response.msg,
+               type: 'warning',
+               duration: 5000
+             })
+         }
+         this.loading=false
+       }).catch()
+
      },
      uploadError(){
       this.$notify({

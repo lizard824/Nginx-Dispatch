@@ -4,14 +4,14 @@
     <el-button type="primary" @click="add">add</el-button>
     <!-- <el-button type="primary" @click="search" icon="el-icon-search">搜索</el-button> -->
     <!-- <el-button type="primary" @click="MultiEdit" icon="el-icon-edit">批量</el-button> -->
-    <el-button type="primary" @click="MultiDelete" icon="el-icon-delete">批量</el-button>
-    <el-upload action="" style="float:right;padding-bottom:10px">
+    <!-- <el-button type="primary" @click="MultiDelete" icon="el-icon-delete">批量</el-button> -->
+    <!-- <el-upload action="" style="float:right;padding-bottom:10px">
       <el-button type="primary">上传</el-button>
       <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件(文件格式遵循导出文件)</div>
-    </el-upload>
+    </el-upload> -->
   </div>
 
-  <el-table :data="tableData" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
+  <el-table :data="list" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
     <el-table-column type="expand">
       <template slot-scope="scope">
         <el-form label-position="left" inline class="table-expand">
@@ -34,37 +34,26 @@
     </el-table-column> -->
     <el-table-column label="域名" sortable>
       <template slot-scope="scope">
-        <span v-show="!scope.row.edit"  style="margin-left: 10px">{{ scope.row.date }}</span>
-        <el-input v-model="scope.row.date" v-show="scope.row.edit"></el-input>
+        <span v-show="!scope.row.edit"  style="margin-left: 10px">{{ scope.row.domain_name }}</span>
+        <el-input v-model="scope.row.domain_name" v-show="scope.row.edit"></el-input>
       </template>
     </el-table-column>
     <el-table-column label="地区" sortable>
       <template slot-scope="scope">
-        <el-tag type="info">{{ scope.row.date }}</el-tag>
+        <el-tag type="info">{{ scope.row.region }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column label="类型" sortable>
       <template slot-scope="scope">
-        <span v-show="!scope.row.edit" style="margin-left: 10px">{{ scope.row.name }}</span>
-        <el-input v-model="scope.row.name" v-show="scope.row.edit"></el-input>
+        <span v-show="!scope.row.edit" style="margin-left: 10px">{{ scope.row.domain_type }}</span>
+        <el-input v-model="scope.row.domain_type" v-show="scope.row.edit"></el-input>
       </template>
     </el-table-column>
-    <el-table-column label="姓名">
+    <el-table-column label="线路1" sortable>
       <template slot-scope="scope">
-        <el-popover v-show="!scope.row.edit" trigger="hover" placement="top">
-          <p>姓名: {{ scope.row.name }}</p>
-          <p>住址: {{ scope.row.address }}</p>
-          <div slot="reference" class="name-wrapper">
-            <el-tag>{{ scope.row.name }}</el-tag>
-          </div>
-        </el-popover>
-      </template>
-    </el-table-column>
-    <el-table-column label="城市" sortable>
-      <template slot-scope="scope">
-        <span v-show="!scope.row.edit">{{scope.row.city1}}</span>
-        <el-select v-show="scope.row.edit" v-model="scope.row.city1"  placeholder="请选择">
-          <el-option v-for="item in cities" :key="item.value" :label="item.label" :value="item.value">
+        <span v-show="!scope.row.edit">{{scope.row.line1 | transfer }}</span>
+        <el-select v-show="scope.row.edit" v-model="scope.row.line1"  placeholder="请选择" filterable>
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" >
             <span style="float: left">{{ item.label }}</span>
             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
           </el-option>
@@ -72,26 +61,28 @@
         <el-button @click="dialogEditVisible=true" icon="el-icon-edit" size="mini"></el-button>
       </template>
     </el-table-column>
-    <el-table-column label="城市" sortable>
+    <el-table-column label="线路2" sortable>
       <template slot-scope="scope">
-        <span v-show="!scope.row.edit">{{scope.row.city2}}</span>
-        <el-select v-show="scope.row.edit" v-model="scope.row.city2"  placeholder="请选择">
-          <el-option v-for="item in cities" :key="item.value" :label="item.label" :value="item.value">
+        <span v-show="!scope.row.edit">{{scope.row.line2 | transfer}}</span>
+        <el-select v-show="scope.row.edit" v-model="scope.row.line2"  placeholder="请选择" filterable>
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             <span style="float: left">{{ item.label }}</span>
             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
           </el-option>
         </el-select>
+        <el-button @click="dialogEditVisible=true" icon="el-icon-edit" size="mini"></el-button>
       </template>
     </el-table-column>
-    <el-table-column label="城市" sortable>
+    <el-table-column label="线路3" sortable>
       <template slot-scope="scope">
-        <span v-show="!scope.row.edit">{{scope.row.city3}}</span>
-        <el-select v-show="scope.row.edit" v-model="scope.row.city3"  placeholder="请选择">
-          <el-option v-for="item in cities" :key="item.value" :label="item.label" :value="item.value">
+        <span v-show="!scope.row.edit">{{scope.row.line3 | transfer }}</span>
+        <el-select v-show="scope.row.edit" v-model="scope.row.line3"  placeholder="请选择" filterable>
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             <span style="float: left">{{ item.label }}</span>
             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
           </el-option>
         </el-select>
+        <el-button @click="dialogEditVisible=true" icon="el-icon-edit" size="mini"></el-button>
       </template>
     </el-table-column>
     <el-table-column align="center" label="编辑">
@@ -149,7 +140,8 @@ import {
   addItem,
   deleteItem,
   editItem,
-  searchItem
+  searchItem,
+  getLine
 } from '@/api/domain'
 
 export default {
@@ -200,59 +192,9 @@ export default {
         page:1,
         pagesize:20
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        city1: '广州',
-        city2: '北京',
-        city3: '将军澳',
-        address: '上海市普陀区金沙江路 1518 弄',
-        edit: false
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        city1: '广州',
-        city2: '北京',
-        city3: '将军澳',
-        address: '上海市普陀区金沙江路 1517 弄',
-        edit: false
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        city1: '广州',
-        city2: '北京',
-        city3: '将军澳',
-        address: '上海市普陀区金沙江路 1519 弄',
-        edit: false
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        city1: '广州',
-        city2: '北京',
-        city3: '将军澳',
-        address: '上海市普陀区金沙江路 1516 弄',
-        edit: false
-      }],
-      cities: [{
-        value: '北京',
-        label: '北京'
-      }, {
-        value: '广州',
-        label: '广州'
-      }, {
-        value: '将军澳',
-        label: '将军澳'
-      }, {
-        value: '荃湾',
-        label: '荃湾'
-      }, {
-        value: '深圳',
-        label: '深圳'
-      }, {
-        value: '国外',
-        label: '国外'
-      }],
-      value6: ''
+
+      options: []
+
     }
   },
   // mounted:function(){
@@ -262,26 +204,63 @@ export default {
   // },
   created(){
       this.getList()
+      this.getLine()
+  },
+  filters:{
+    transfer: function(val){
+
+      switch (val){
+        case 1 :
+        return '北京'
+        break
+        case 2:
+        return '广州'
+        break
+        case 3:
+        return '深圳'
+        break
+        case 4:
+        return '将军澳'
+        break
+        case 5:
+        return '荃湾'
+        break
+      }
+    }
   },
   methods: {
     getList() {
       this.listLoading = true
       getList(this.listQuery).then(response =>{
-        this.list =  response.data
-        this.total = response.total[0].total
+        console.log(response.data)
+        var items = response.data
+        this.list =  items.map(ele=>
+          {this.$set(ele,'edit',false)
+          return ele
+        }
+        )
+        this.total = response.total
         this.listLoading = false
+        console.log(this.list)
       }).catch((err)=>{
         console.log(err)
       })
     },
+    getLine(){
+      getLine().then(response =>{
+
+        this.options = response.data
+        console.log(this.options)
+      })
+    },
     add() {
-      this.tableData.unshift({
-        data: "",
-        name: "",
-        city1: "",
-        city2: "",
-        city3: "",
-        address: "",
+      this.list.unshift({
+        domain_name:'',
+        region:'国内',
+        domain_type:'',
+        line1:'',
+        line2:'',
+        line3:'',
         edit: true
       })
     },

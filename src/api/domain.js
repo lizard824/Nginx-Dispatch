@@ -12,7 +12,7 @@ export function addItem(item) {
   return request({
     url: '/domain/add',
     method: 'post',
-    data: { item }
+    item
   })
 }
 
@@ -20,7 +20,7 @@ export function deleteItem(item) {
   return request({
     url: '/domain/delete',
     method: 'post',
-    data: { item }
+    item
   })
 }
 
@@ -28,7 +28,7 @@ export function editItem(item) {
   return request({
     url: '/domain/update',
     method: 'post',
-    data: { item }
+    item
   })
 }
 
@@ -37,5 +37,12 @@ export function searchItem(item) {
     url: '/domain/add',
     method: 'get',
     item
+  })
+}
+
+export function getLine() {
+  return request({
+    url: '/domain/line',
+    method: 'get'
   })
 }

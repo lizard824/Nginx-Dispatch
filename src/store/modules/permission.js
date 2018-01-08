@@ -7,7 +7,6 @@ import { asyncRouterMap, constantRouterMap } from '@/router'
  */
 function hasPermission(perms, route) {
   console.log(route.meta)
-
   if (route.meta && route.meta.perm) {
     return perms.split(',').some(perm => route.meta.perm.indexOf(perm) >= 0)
   } else {

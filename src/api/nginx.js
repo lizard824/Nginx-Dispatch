@@ -12,7 +12,7 @@ export function addItem(data) {
   return request({
     url: '/nginx/add',
     method: 'post',
-    data: { data }
+    data
   })
 }
 

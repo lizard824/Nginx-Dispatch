@@ -39,3 +39,11 @@ export function searchItem(data) {
     data
   })
 }
+
+export function transfer(data) {
+  return request({
+    url: '/ssl/transfer',
+    method: 'post',
+    data
+  })
+}
