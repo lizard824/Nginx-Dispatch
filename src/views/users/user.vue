@@ -24,8 +24,7 @@
     <el-tree :data="data2" show-checkbox node-key="id" ref="tree" :default-checked-keys="checkedKey" :props="defaultProps">
     </el-tree>
     <div slot="footer" class="dialog-footer">
-      <!--<el-button @click="getCheckedNodes">通过 node 获取</el-button>-->
-      <!--<el-button @click="getCheckedKeys">通过 key 获取</el-button>-->
+    
 
       <el-button @click="dialogFormVisible = false">取 消</el-button>
       <el-button type="primary" @click="update">确 定</el-button>
