@@ -16,16 +16,21 @@
       <template slot-scope="scope">
         <el-form label-position="left" inline class="table-expand">
           <el-form-item label="upstream">
-            <span>{{scope.row.date}}</span>
+            <span v-show="!scope.row.edit">{{scope.row.upstreams.join(',')}}</span>
+            <el-input v-model="scope.row.upstreams" v-show="scope.row.edit"></el-input>
+            <span v-show=""></span>
           </el-form-item>
           <el-form-item label="LB算法">
-            <span>{{scope.row.date}}</span>
+            <span v-show="!scope.row.edit">{{scope.row.function}}</span>
+            <el-input v-model="scope.row.function" v-show="scope.row.edit"></el-input>
           </el-form-item>
           <el-form-item label="权重">
-            <span>{{scope.row.date}}</span>
+            <span v-show="!scope.row.edit">{{scope.row.weight}}</span>
+            <el-input v-model="scope.row.weight" v-show="scope.row.edit"></el-input>
           </el-form-item>
           <el-form-item label="MaxFailed">
-              <span>{{scope.row.date}}</span>
+            <span v-show="!scope.row.edit">{{scope.row.max_fails}}</span>
+            <el-input v-model="scope.row.max_fails" v-show="scope.row.edit"></el-input>
           </el-form-item>
         </el-form>
       </template>
@@ -34,13 +39,17 @@
     </el-table-column> -->
     <el-table-column label="域名" sortable>
       <template slot-scope="scope">
-        <span v-show="!scope.row.edit"  style="margin-left: 10px">{{ scope.row.domain_name }}</span>
+        <span v-show="!scope.row.edit" style="margin-left: 10px">{{ scope.row.domain_name }}</span>
         <el-input v-model="scope.row.domain_name" v-show="scope.row.edit"></el-input>
       </template>
     </el-table-column>
     <el-table-column label="地区" sortable>
       <template slot-scope="scope">
-        <el-tag type="info">{{ scope.row.region }}</el-tag>
+        <el-tag v-show="!scope.row.edit" type="info">{{ scope.row.region }}</el-tag>
+        <el-select v-show="scope.row.edit" v-model="scope.row.region"  placeholder="请选择" filterable>
+          <el-option v-for="item in region" :key="item.value"  :value="item.value" >
+          </el-option>
+    </el-select>
       </template>
     </el-table-column>
     <el-table-column label="类型" sortable>
@@ -51,7 +60,7 @@
     </el-table-column>
     <el-table-column label="线路1" sortable>
       <template slot-scope="scope">
-        <span v-show="!scope.row.edit">{{scope.row.line1 | transfer }}</span>
+        <span v-show="!scope.row.edit">{{scope.row.line1 }}</span>
         <el-select v-show="scope.row.edit" v-model="scope.row.line1"  placeholder="请选择" filterable>
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" >
             <span style="float: left">{{ item.label }}</span>
@@ -63,7 +72,7 @@
     </el-table-column>
     <el-table-column label="线路2" sortable>
       <template slot-scope="scope">
-        <span v-show="!scope.row.edit">{{scope.row.line2 | transfer}}</span>
+        <span v-show="!scope.row.edit">{{scope.row.line2}}</span>
         <el-select v-show="scope.row.edit" v-model="scope.row.line2"  placeholder="请选择" filterable>
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             <span style="float: left">{{ item.label }}</span>
@@ -75,7 +84,7 @@
     </el-table-column>
     <el-table-column label="线路3" sortable>
       <template slot-scope="scope">
-        <span v-show="!scope.row.edit">{{scope.row.line3 | transfer }}</span>
+        <span v-show="!scope.row.edit">{{scope.row.line3}}</span>
         <el-select v-show="scope.row.edit" v-model="scope.row.line3"  placeholder="请选择" filterable>
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             <span style="float: left">{{ item.label }}</span>
@@ -118,7 +127,7 @@
 </el-input>
     <div slot="footer" class="dialog-footer">
         <el-button @click="dialogEditVisible = false">取 消</el-button>
-        <el-button type="primary" @click="edit">确 定</el-button>
+        <el-button type="primary" @click="onEditorChange">确 定</el-button>
     </div>
   </el-dialog>
   <!-- search -->
@@ -143,6 +152,7 @@ import {
   searchItem,
   getLine
 } from '@/api/domain'
+import axios from 'axios'
 
 export default {
   data() {
@@ -172,62 +182,94 @@ export default {
       mutipleSelection: [],
       transferSelect: [],
       setList: selectList,
+      line1:'',
+      line2:'',
+      line3:'',
       temp: {
+        domain_id:null,
         domain_name:null,
         region:null,
         domain_type:null,
         line1:null,
         line2:null,
-        line3:null
+        line3:null,
+        upstream:null,
+        caculation:null,
+        weight:null,
+        max_fails:null,
+        fail_timeout:null
       },
-      ctemp: {
-        domain_name:null,
-        region:null,
-        domain_type:null,
-        line1:null,
-        line2:null,
-        line3:null
-      },
+      // ctemp: {
+      //   domain_name:null,
+      //   region:null,
+      //   domain_type:null,
+      //   line1:null,
+      //   line2:null,
+      //   line3:null,
+      //   upstream:null,
+      //   caculation:null,
+      //   weight:null,
+      //   max_fails:null,
+      //   fail_timeout:null
+      // },
       listQuery: {
         page:1,
         pagesize:20
       },
+      region:[{value:'国内'},{value:'国外'}],
+
+
+
 
       options: []
 
     }
   },
-  // mounted:function(){
-  //   components:{
-  //     quillEditor
+// computed:{
+//
+//   linet:function(){
+//     options.forEach(ele=>{
+//       this.list.forEach(li=>{
+//         if(li.line1===ele.value){
+//           this.line1 = ele.label
+//         }
+//       })
+//
+//   })
+//   return this.line1
+// }
+// },
+watch:{
+  options:function(newOp){
+    this.list.forEach(ele=>{
+      this.options.forEach(op=>{
+        if(ele.line1===op.value){
+          ele.line1=op.label
+        }
+        else if(ele.line2===op.value){
+          ele.line2=op.label
+        }
+        else if(ele.line3===op.value){
+          ele.line3=op.label
+        }
+      })
+    })
+  }
+},
+  created(){
+
+      this.getList()
+
+  },
+  // filters:{
+  //   transfer: function(val){
+  //       VM.options.forEach(ele=>{
+  //           if(val===ele.value){
+  //             return ele.lable
+  //           }
+  //       })
   //   }
   // },
-  created(){
-      this.getList()
-      this.getLine()
-  },
-  filters:{
-    transfer: function(val){
-
-      switch (val){
-        case 1 :
-        return '北京'
-        break
-        case 2:
-        return '广州'
-        break
-        case 3:
-        return '深圳'
-        break
-        case 4:
-        return '将军澳'
-        break
-        case 5:
-        return '荃湾'
-        break
-      }
-    }
-  },
   methods: {
     getList() {
       this.listLoading = true
@@ -242,6 +284,7 @@ export default {
         this.total = response.total
         this.listLoading = false
         console.log(this.list)
+        this.getLine()
       }).catch((err)=>{
         console.log(err)
       })
@@ -265,9 +308,33 @@ export default {
       })
     },
     submit(row){
+      console.log(row)
       row.edit=!row.edit
       if(row.edit===false){
-      editItem(this.temp).then(response=>{
+        if(row.domain_id==null){
+          this.getSn(row)
+          console.log('this is add Item')
+          addItem(row).then(response=>{
+            if(response.code=='20000'){
+              this.$notify({
+                title: '成功',
+                  message: response.msg,
+                  type: 'success',
+                  duration: 5000
+              })
+            }
+            else{
+              this.$notify({
+                  title: '失败',
+                  message: response.msg,
+                  type: 'warning',
+                  duration: 5000
+                })
+            }
+          })
+        }else{
+          this.getSn(row)
+      editItem(row).then(response=>{
         if(response.code=='20000'){
           this.$notify({
             title: '成功',
@@ -285,6 +352,7 @@ export default {
             })
         }
       })
+    }
       }
     },
     //config
@@ -300,26 +368,26 @@ export default {
         console.log(err)
       })
     },
-    edit() {
-      editItem(this.temp).then(response =>{
-        if(response.code=='20000'){
-          this.$notify({
-            title: '成功',
-              message: response.msg,
-              type: 'success',
-              duration: 5000
-          })
-        }
-        else{
-          this.$notify({
-              title: '失败',
-              message: response.msg,
-              type: 'warning',
-              duration: 5000
-            })
-        }
-      })
-    },
+    // edit() {
+    //   editItem(this.temp).then(response =>{
+    //     if(response.code=='20000'){
+    //       this.$notify({
+    //         title: '成功',
+    //           message: response.msg,
+    //           type: 'success',
+    //           duration: 5000
+    //       })
+    //     }
+    //     else{
+    //       this.$notify({
+    //           title: '失败',
+    //           message: response.msg,
+    //           type: 'warning',
+    //           duration: 5000
+    //         })
+    //     }
+    //   })
+    // },
     // MultiEdit() {
     //
     // },
@@ -397,6 +465,12 @@ export default {
           })
         });
      },
+     getSn(row){
+          axios.post({"lhzq_sn":row.upstream}).then(response=>{
+                row.upstream = response.data
+          })
+     }
+
   }
 }
 </script>
