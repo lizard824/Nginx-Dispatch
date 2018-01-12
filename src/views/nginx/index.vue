@@ -77,7 +77,7 @@
 
   </el-table>
   <div v-show="true" class="pagination-container">
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
   </div>
 
@@ -237,10 +237,10 @@ export default {
       setList: selectList,
       chart: '',
       optionType:[{
-        value:'test',
-        label:'test'},
-        {value:'online',
-        label:'online'
+        value:'测试',
+        label:'测试'},
+        {value:'线上',
+        label:'线上'
       }],
       optionRole:[{
         value:'master',

@@ -32,11 +32,11 @@ export function editItem(data) {
   })
 }
 
-export function searchItem(data) {
+export function searchItem(params) {
   return request({
     url: '/nginx/add',
     method: 'get',
-    data
+    params
   })
 }
 

@@ -8,35 +8,35 @@ export function getList(params) {
   })
 }
 
-export function addItem(item) {
+export function addItem(data) {
   return request({
     url: '/domain/add',
     method: 'post',
-    item
+    data
   })
 }
 
-export function deleteItem(item) {
+export function deleteItem(data) {
   return request({
     url: '/domain/delete',
     method: 'post',
-    item
+    data
   })
 }
 
-export function editItem(item) {
+export function editItem(data) {
   return request({
     url: '/domain/update',
     method: 'post',
-    item
+    data
   })
 }
 
-export function searchItem(item) {
+export function searchItem(params) {
   return request({
     url: '/domain/add',
     method: 'get',
-    item
+    params
   })
 }
 

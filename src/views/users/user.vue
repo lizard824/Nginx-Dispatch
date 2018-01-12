@@ -17,14 +17,14 @@
   </el-table>
 
   <div v-show="!listLoading" class="pagination-container">
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
   </div>
   <el-dialog :title="dialogStatus" :visible.sync="dialogFormVisible">
     <el-tree :data="data2" show-checkbox node-key="id" ref="tree" :default-checked-keys="checkedKey" :props="defaultProps">
     </el-tree>
     <div slot="footer" class="dialog-footer">
-    
+
 
       <el-button @click="dialogFormVisible = false">取 消</el-button>
       <el-button type="primary" @click="update">确 定</el-button>
