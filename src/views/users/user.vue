@@ -61,47 +61,24 @@ export default {
       data2: [{
         id: '1',
         label: 'SSL证书',
-        children: [{
-            id: '11',
-            label: '物理资产',
+
             children: [{
-              id: '11c',
+              id: '1c',
               label: '增加'
             }, {
-              id: '11u',
+              id: '1u',
               label: '修改'
             }, {
-              id: '11r',
+              id: '1r',
               label: '查询'
             }, {
-              id: '11d',
+              id: '1d',
               label: '删除'
             }, {
-              id: '11l',
+              id: '1l',
               label: '上传'
             }]
-          },
-          {
-            id: '12',
-            label: 's',
-            children: [{
-              id: '12c',
-              label: '增加'
-            }, {
-              id: '12u',
-              label: '修改'
-            }, {
-              id: '12r',
-              label: '查询'
-            }, {
-              id: '12d',
-              label: '删除'
-            }, {
-              id: '12l',
-              label: '上传'
-            }]
-          }
-        ]
+
       }, {
         id: '2',
         label: 'nginx服务器',
@@ -124,41 +101,24 @@ export default {
       }, {
         id: '3',
         label: 'domain管理',
-        children: [{
-            id: '31',
-            label: 'IP地址段',
+
             children: [{
-              id: '31c',
+              id: '3c',
               label: '增加'
             }, {
-              id: '31u',
+              id: '3u',
               label: '修改'
             }, {
-              id: '31r',
+              id: '3r',
               label: '查询'
             }, {
-              id: '31d',
+              id: '3d',
               label: '删除'
             }, {
-              id: '31l',
+              id: '3l',
               label: '上传'
             }]
-          },
-          {
-            id: '32',
-            label: 'IP',
-            children: [{
-              id: '32u',
-              label: '修改'
-            }, {
-              id: '32r',
-              label: '查询'
-            }, {
-              id: '32l',
-              label: '上传'
-            }]
-          }
-        ]
+
       }, {
         id: '5',
         label: 'User'

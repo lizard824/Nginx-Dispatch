@@ -505,7 +505,7 @@ watch:{
        console.log(this.multipleSelection)
      },
      handleDelete(index,row){
-       this.loading= true
+
        const h = this.$createElement;
         this.$msgbox({
           title: '删除',
@@ -518,6 +518,7 @@ watch:{
           cancelButtonText: '取消',
 
         }).then(action => {
+           this.loading= true
           deleteItem({domain_id: [row.domain_id]}).then(response => {
             console.log(response.data);
             if(response.data.code=='20000'){
@@ -539,6 +540,7 @@ watch:{
             this.list.splice(index, 1)
               this.loading=false
           }).catch(error => {
+            this.loading=false
           })
         });
      },
