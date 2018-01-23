@@ -64,13 +64,10 @@ export default {
 
             children: [{
               id: '1c',
-              label: '增加'
+              label: '分发'
             }, {
               id: '1u',
               label: '修改'
-            }, {
-              id: '1r',
-              label: '查询'
             }, {
               id: '1d',
               label: '删除'
@@ -90,18 +87,30 @@ export default {
           label: '修改'
         }, {
           id: '2r',
-          label: '查询'
-        }, {
+          label: '请求'
+        },
+        {
+          id: '2n',
+          label: '连接'
+        },{
           id: '2d',
           label: '删除'
         }, {
           id: '2l',
           label: '上传'
+        },{
+          id: '2s',
+          label: '重启'
+        },{
+          id: '2k',
+          label: '检查'
+        },{
+          id: '2t',
+          label: '切换'
         }]
       }, {
         id: '3',
         label: 'domain管理',
-
             children: [{
               id: '3c',
               label: '增加'
@@ -114,13 +123,10 @@ export default {
             }, {
               id: '3d',
               label: '删除'
-            }, {
-              id: '3l',
-              label: '上传'
             }]
 
       }, {
-        id: '5',
+        id: '4',
         label: 'User'
       }],
       defaultProps: {

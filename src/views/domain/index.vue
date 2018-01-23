@@ -1,18 +1,13 @@
 <template>
 <div class="app-container calendar-list-container">
   <div class="filter-container" style="padding-bottom: 10px">
-    <el-button type="primary" @click="add">add</el-button>
-    <el-button type="primary" @click="remove">撤销</el-button>
-    <!-- <el-button type="primary" @click="MultiEdit" icon="el-icon-edit">批量</el-button> -->
-    <!-- <el-button type="primary" @click="MultiDelete" icon="el-icon-delete">批量</el-button> -->
-    <!-- <el-upload action="" style="float:right;padding-bottom:10px">
-      <el-button type="primary">上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件(文件格式遵循导出文件)</div>
-    </el-upload> -->
+    <el-button type="primary" @click="add">新增域名</el-button>
+    <el-button type="primary" @click="dialogTrasferVisible=true">多域名切换</el-button>
+    <el-button type="primary" @click="remove">撤销新增</el-button>
   </div>
 
-  <el-table :data="list" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange" v-loading="loading">
-    <el-table-column type="expand">
+  <el-table :data="list" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange" v-loading="loading" default-expand-all>
+    <el-table-column type="expand" >
       <template slot-scope="scope">
         <el-form label-position="left" inline class="table-expand"　label-width="220px">
           <el-form-item label="upstreams">
@@ -79,7 +74,7 @@
             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
           </el-option>
         </el-select>
-        <el-button @click="dialogEditVisible=true" icon="el-icon-edit" size="mini"></el-button>
+        <!-- <el-button @click="dialogEditVisible=true" icon="el-icon-edit" size="mini"></el-button> -->
       </template>
     </el-table-column>
     <el-table-column label="线路2" sortable>
@@ -91,7 +86,7 @@
             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
           </el-option>
         </el-select>
-        <el-button @click="dialogEditVisible=true" icon="el-icon-edit" size="mini"></el-button>
+        <!-- <el-button @click="dialogEditVisible=true" icon="el-icon-edit" size="mini"></el-button> -->
       </template>
     </el-table-column>
     <el-table-column label="线路3" sortable>
@@ -103,7 +98,7 @@
             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
           </el-option>
         </el-select>
-        <el-button @click="dialogEditVisible=true" icon="el-icon-edit" size="mini"></el-button>
+        <!-- <el-button @click="dialogEditVisible=true" icon="el-icon-edit" size="mini"></el-button> -->
       </template>
     </el-table-column>
     <el-table-column align="center" label="编辑">
@@ -119,16 +114,38 @@
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
   </div>
-  <!-- add -->
-  <!-- <el-dialog title="add" :visible.sync="dialogNewVisible" width="550px">
-    <el-form :model="ctemp" :rules="rules" ref="ctemp" label-width="100px">
+  <!-- transfer -->
+  <el-dialog title="域名切换" :visible.sync="dialogTrasferVisible" width="550px">
+    <el-radio-group v-model="selectCity" style="margin-bottom:10px;" v-for="item in options" :key="item.value" :label="item.label" :value="item.value" @change="searchLine(selectCity)">
+      <el-radio-button :label="item.label+item.value" border></el-radio-button>
+     </el-radio-group>
 
-    </el-form>
+      <el-transfer v-model="transferList" :data="problemList"  :titles="['地址列表', '切换列表']"></el-transfer>
+      <section id="transfer">
+      <el-select  v-model="transferLine1"  placeholder="Line1" filterable>
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" >
+        <span style="float: left">{{ item.label }}</span>
+        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+      </el-option>
+        </el-select>
+      <el-select  v-model="transferLine2"  placeholder="Line2" filterable>
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" >
+        <span style="float: left">{{ item.label }}</span>
+        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+      </el-option>
+        </el-select>
+      <el-select  v-model="transferLine3"  placeholder="Line3" filterable>
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" >
+        <span style="float: left">{{ item.label }}</span>
+        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+      </el-option>
+      </el-select>
+      </section>
     <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogNewVisible = false">取 消</el-button>
-        <el-button type="primary" @click="create">确 定</el-button>
+        <el-button @click="dialogTransferVisible = false">取 消</el-button>
+        <el-button type="primary" @click="changeLine">确 定</el-button>
     </div>
-  </el-dialog> -->
+  </el-dialog>
   <!-- edit -->
   <el-dialog title="config" :visible.sync="dialogEditVisible" width="550px">
     <el-input
@@ -162,7 +179,9 @@ import {
   deleteItem,
   editItem,
   searchItem,
-  getLine
+  getLine,
+  getIdc,
+  mutipleUpdate
 } from '@/api/domain'
 import axios from 'axios'
 import qs from 'qs'
@@ -182,6 +201,12 @@ export default {
       }
     return {
       list: null,
+      transferList:[],
+      problemList:[],
+      selectCity:null,
+      transferLine1:null,
+      transferLine2:null,
+      transferLine3:null,
       total: null,
       listLoading: true,
       textarea:'',
@@ -197,7 +222,7 @@ export default {
         {value:'线上',
         label:'线上'
       }],
-      dialogNewVisible: false,
+      dialogTrasferVisible: false,
       dialogEditVisible: false,
       dialogSearchVisible: false,
       mutipleSelection: [],
@@ -338,15 +363,19 @@ watch:{
         });
         this.tempIp=[]
         // return 1
-    })
+    }).catch(err=>{})
   },
   handover(row){
 
+    if(Array.isArray(row)){
+
+      row.edit=false
+    }
     if(row.edit===false){
             this.loading=true
             console.log(this.tempIp)
 
-            if(row.domain_id==null){
+            if(row.domain_id==null&& !Array.isArray(row)){
 
               console.log('this is add Item')
               this.ctemp.upstreams= this.tempUpstreams
@@ -418,16 +447,25 @@ watch:{
 
     }
   },
+  handleMuti(){
+    this.multipleSelection = Array.from(this.setList)
+      console.log(this.multipleSelection)
+      this.submit(this.multipleSelection)
+  },
     submit(row){
       console.log(row)
-      this.getSn(row)
-      setTimeout(this.handover,2000,row)
+      if(Array.isArray(row)){
+        row.forEach(ele=>{
+          this.getSn(ele)
+        })
 
+      }else{
+        this.getSn(row)
+
+      }
+      var id = setTimeout(this.handover,2000,row)
+      console.log(id)
       row.edit=!row.edit
-
-
-
-
     },
 
     //config
@@ -442,6 +480,51 @@ watch:{
       }).catch(err=>{
         console.log(err)
       })
+    },
+    searchLine(idc){
+
+      var num = parseInt(idc.substr(-1))
+      //清空每次查询后的结果
+      if(this.problemList.length!=0){
+        this.problemList.splice(0)
+      }
+        getIdc({id:num}).then(response =>{
+          let domainList= response.data
+          domainList.forEach(ele=>{
+            console.log(ele)
+            this.problemList.push({
+              key:ele,
+              label:ele,
+              diabled:false
+            })
+          })
+          console.log(this.problemList)
+        }).catch(err=>{console.log(err)})
+    },
+    changeLine(){
+        console.log(this.transferList)
+        this.loading=true
+        mutipleUpdate({domainList:this.transferList,line1:this.transferLine1,line2:this.transferLine2,line3:this.transferLine3}).then(response=>{
+          if(response.code=='20000'){
+            this.$notify({
+              title: '成功',
+                message: response.msg,
+                type: 'success',
+                duration: 5000
+            })
+          }
+          else{
+            this.$notify({
+                title: '失败',
+                message: response.msg,
+                type: 'warning',
+                duration: 5000
+              })
+          }
+          this.loading=false
+        }).catch(err=>{
+          this.loading=false
+        })
     },
     // edit() {
     //   editItem(this.temp).then(response =>{
@@ -500,9 +583,8 @@ watch:{
 
        this.setList = val
        console.log(this.setList)
-       this.temp = Object.assign({}, val[0])
 
-       console.log(this.multipleSelection)
+
      },
      handleDelete(index,row){
 
@@ -564,5 +646,13 @@ watch:{
 }
 .el-input {
   width:180px;
+}
+
+#transfer{
+  margin-top: 10px;
+  display: flex;
+  flex-direction:row;
+  flex-wrap:nowrap;
+
 }
 </style>

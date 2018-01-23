@@ -7,7 +7,8 @@
     <!-- <el-button type="primary" @click="MultiDelete" icon="el-icon-delete">批量</el-button> -->
     <el-upload action="http://172.28.48.61:4000/ssl/update"    :show-file-list="false" :on-error="uploadError" :on-success="uploadSuccess" style="float:right;padding-bottom:10px">
       <el-button  type="primary">上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传ssl文件</div>
+      <div slot="tip" class="el-upload__tip" >只能上传ssl文件</div>
+       <!-- v-if="this.$store.getters.perms.indexOf('1l')>-1" -->
     </el-upload>
   </div>
 
@@ -55,8 +56,8 @@
     <el-table-column align="center" label="编辑">
       <template slot-scope="scope">
 
-            <el-button type="primary" size="small" icon="el-icon-upload2" @click="dispatch(scope.row)">分发</el-button>
-            <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.$index,scope.row)"></el-button>
+            <el-button type="primary" size="small" icon="el-icon-upload2" @click="dispatch(scope.row)" >分发</el-button>
+            <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.$index,scope.row)" ></el-button>
 
 
       </template>

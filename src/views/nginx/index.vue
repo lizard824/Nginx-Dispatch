@@ -10,7 +10,7 @@
 
   </div>
 
-  <el-table :data="list" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
+  <el-table :data="list" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange" v-loading="loading">
     <el-table-column type="selection" width="35">
     </el-table-column>
     <el-table-column label="idc" sortable>
@@ -202,6 +202,7 @@ export default {
       idList: null,
       date:[],
       item:'',
+      loading:false,
       listQuery: {
         page: 1,
         pagesize: 20,
@@ -314,6 +315,7 @@ export default {
     },
 
     changeRole(row) {
+
       console.log(row)
       if (row.role == 'Master') {
         // this.$set(row, 'role', 'slave')
@@ -385,10 +387,12 @@ export default {
         cancelButtonText: '取消',
 
       }).then(action => {
+        this.loading = true
         cmd({
           id: this.idList,
           action: act
         }).then(response => {
+            this.loading = false
           if (response.code == '20000') {
             this.$notify({
               title: '成功',
@@ -399,7 +403,7 @@ export default {
           } else {
             this.$notify({
               title: '失败',
-              message: response.msg,
+              message: response.data[0].failed,
               type: 'warning',
               duration: 5000
             })

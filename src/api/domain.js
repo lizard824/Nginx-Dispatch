@@ -46,3 +46,19 @@ export function getLine() {
     method: 'get'
   })
 }
+
+export function getIdc(params) {
+  return request({
+    url: '/domain/getbyidc',
+    method: 'get',
+    params
+  })
+}
+
+export function mutipleUpdate(data) {
+  return request({
+    url: '/domain/multiupdate',
+    method: 'post',
+    data
+  })
+}
