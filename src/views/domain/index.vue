@@ -116,6 +116,20 @@
   </div>
   <!-- transfer -->
   <el-dialog title="域名切换" :visible.sync="dialogTrasferVisible" width="550px">
+    <section class="transfer">
+      <el-select  v-model="regionTransfer"  placeholder="region" filterable>
+      <el-option v-for="item in regions" :key="item.value" :label="item.label" :value="item.value" >
+        <span style="float: left">{{ item.label }}</span>
+        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+      </el-option>
+        </el-select>
+        <el-select  v-model="domainType"  placeholder="type" filterable>
+        <el-option v-for="item in optionType" :key="item.value" :label="item.label" :value="item.value" >
+          <span style="float: left">{{ item.label }}</span>
+          <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+        </el-option>
+          </el-select>
+    </section>
     <el-radio-group v-model="selectCity" style="margin-bottom:10px;" v-for="item in options" :key="item.value" :label="item.label" :value="item.value" @change="searchLine(selectCity)">
       <el-radio-button :label="item.label+item.value" border></el-radio-button>
      </el-radio-group>
@@ -141,20 +155,7 @@
       </el-option>
       </el-select>
       </section>
-        <section class="transfer">
-          <el-select  v-model="regionTransfer"  placeholder="region" filterable>
-          <el-option v-for="item in regions" :key="item.value" :label="item.label" :value="item.value" >
-            <span style="float: left">{{ item.label }}</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
-          </el-option>
-            </el-select>
-            <el-select  v-model="domainType"  placeholder="type" filterable>
-            <el-option v-for="item in optionType" :key="item.value" :label="item.label" :value="item.value" >
-              <span style="float: left">{{ item.label }}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
-            </el-option>
-              </el-select>
-        </section>
+
     <div slot="footer" class="dialog-footer">
         <el-button @click="dialogTransferVisible = false">取 消</el-button>
         <el-button type="primary" @click="changeLine">确 定</el-button>
@@ -512,7 +513,7 @@ watch:{
       if(this.problemList.length!=0){
         this.problemList.splice(0)
       }
-        getIdc({id:num}).then(response =>{
+        getIdc({id:num,region:this.regionTransfer,domain_type:this.domainType}).then(response =>{
           let domainList= response.data
           domainList.forEach(ele=>{
             console.log(ele)
@@ -682,6 +683,7 @@ watch:{
 
 .transfer{
   margin-top: 10px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction:row;
   flex-wrap:nowrap;
