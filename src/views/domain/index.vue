@@ -121,7 +121,7 @@
      </el-radio-group>
 
       <el-transfer v-model="transferList" :data="problemList"  :titles="['地址列表', '切换列表']"></el-transfer>
-      <section id="transfer">
+      <section class="transfer">
       <el-select  v-model="transferLine1"  placeholder="Line1" filterable>
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" >
         <span style="float: left">{{ item.label }}</span>
@@ -141,6 +141,20 @@
       </el-option>
       </el-select>
       </section>
+        <section class="transfer">
+          <el-select  v-model="regionTransfer"  placeholder="region" filterable>
+          <el-option v-for="item in regions" :key="item.value" :label="item.label" :value="item.value" >
+            <span style="float: left">{{ item.label }}</span>
+            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+          </el-option>
+            </el-select>
+            <el-select  v-model="domainType"  placeholder="type" filterable>
+            <el-option v-for="item in optionType" :key="item.value" :label="item.label" :value="item.value" >
+              <span style="float: left">{{ item.label }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+            </el-option>
+              </el-select>
+        </section>
     <div slot="footer" class="dialog-footer">
         <el-button @click="dialogTransferVisible = false">取 消</el-button>
         <el-button type="primary" @click="changeLine">确 定</el-button>
@@ -207,6 +221,8 @@ export default {
       transferLine1:null,
       transferLine2:null,
       transferLine3:null,
+      regionTransfer:null,
+      domainType:null,
       total: null,
       listLoading: true,
       textarea:'',
@@ -222,6 +238,14 @@ export default {
         {value:'线上',
         label:'线上'
       }],
+      regions:[{
+        value:'国内',
+        label:'国内'
+      },{
+        value:'国外',
+        label:'国外'
+      }
+    ],
       dialogTrasferVisible: false,
       dialogEditVisible: false,
       dialogSearchVisible: false,
@@ -502,9 +526,10 @@ watch:{
         }).catch(err=>{console.log(err)})
     },
     changeLine(){
+
         console.log(this.transferList)
-        this.loading=true
-        mutipleUpdate({domainList:this.transferList,line1:this.transferLine1,line2:this.transferLine2,line3:this.transferLine3}).then(response=>{
+
+        mutipleUpdate({domainList:this.transferList,line1:this.transferLine1,line2:this.transferLine2,line3:this.transferLine3,region:this.regionTransfer,domain_type:this.domainType}).then(response=>{
           if(response.code=='20000'){
             this.$notify({
               title: '成功',
@@ -512,6 +537,13 @@ watch:{
                 type: 'success',
                 duration: 5000
             })
+            this.transferList=[]
+            this.transferLine1=null
+            this.transferLine2=null
+            this.transferLine3=null
+            this.regionTransfer=null
+            this.domainType=null
+
           }
           else{
             this.$notify({
@@ -521,9 +553,9 @@ watch:{
                 duration: 5000
               })
           }
-          this.loading=false
+        this.dialogTrasferVisible=false
         }).catch(err=>{
-          this.loading=false
+          this.dialogTrasferVisible=false
         })
     },
     // edit() {
@@ -648,7 +680,7 @@ watch:{
   width:180px;
 }
 
-#transfer{
+.transfer{
   margin-top: 10px;
   display: flex;
   flex-direction:row;
